@@ -27,7 +27,21 @@ export const registerUser = asyncHandler( async(req, res, next) => {
 
 
 // Login User 
-export const login = asyncHandler(async (req, res, next) => {});
+export const login = asyncHandler(async (req, res, next) => {
+
+    const {email, password, role} = req.body;
+    if(!email || !password || !role){
+        return next(new ErrorHandler("Please provide all required fields", 400));
+    }
+    const user = await User.findOne({email, role}).select("password");
+    if(!user){
+        return next(new ErrorHandler("Invalid email, password or role", 401));
+    }
+    
+
+});
+
+
 export const getUser = asyncHandler(async (req, res, next) => {});
 export const logout = asyncHandler(async (req, res, next) => {});
 export const forgotPassword = asyncHandler(async (req, res, next) => {});
