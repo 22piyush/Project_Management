@@ -2,16 +2,40 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../lib/axios";
 import { toast } from "react-toastify";
 
-export const login = createAsyncThunk("login", async(data, thunkApi) => {
+export const login = createAsyncThunk("login", async (data, thunkApi) => {
 
-  try{
-    const res = await axiosInstance.post("/auth/login", data, {
-      headers: {"Content-Type": "application/json"},
-    });
+  try {
+    const res = await axiosInstance.post("/auth/login", data);
     toast.success(res.data.message);
     return res.data.user;
-  }catch(error){
+  } catch (error) {
     toast.error(error.response.data.message);
+    return thunkApi.rejectWithValue(error.response.data.message);
+  }
+
+});
+
+export const forgotPassword = createAsyncThunk("forgotPassword", async (email, thunkApi) => {
+
+  try {
+    const res = await axiosInstance.post("/auth/password/forgot", email);
+    toast.success(res.data.message);
+    return null;
+  } catch (error) {
+    toast.error(error.response.data.message);
+    return thunkApi.rejectWithValue(error.response.data.message);
+  }
+
+});
+
+export const resetPassword = createAsyncThunk("resetPassword", async ({ token, password, confirmPassword }, thunkApi) => {
+
+  try {
+    const res = await axiosInstance.put(`/password/reset/${token}`, { password, confirmPassword });
+    toast.success(res.data.message);
+    return res.data.user;
+  } catch (error) {
+    toast.error(error.response.data.message || "Failed to reset password");
     return thunkApi.rejectWithValue(error.response.data.message);
   }
 
@@ -35,7 +59,7 @@ const authSlice = createSlice({
       state.isLoggingIn = false;
       state.authUser = action.payload;
     }).addCase(login.rejected, (state) => {
-        state.isLoggingIn = false;
+      state.isLoggingIn = false;
     });
   },
 });
