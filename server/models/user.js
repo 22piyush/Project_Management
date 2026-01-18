@@ -70,13 +70,20 @@ const userSchema = new mongoose.Schema({
 
 
 // Store Hashed Password 
-userSchema.pre("save", async function(next){
-    if(!this.isModified("password")){
-        next();
-    }
-    this.password = await bcrypt.hash(this.password, 10);
-})
+// userSchema.pre("save", async function(next){
+//     if(!this.isModified("password")){
+//         console.log("1111111111111111");
+        
+//         next();
+//     }
+//     this.password = await bcrypt.hash(this.password, 10);
+// })
 
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;  // Skip hashing if not modified
+
+    this.password = await bcrypt.hash(this.password, 10);  // Hash password if modified
+});
 
 // Token Generate Function 
 userSchema.methods.generateToken = function(){
@@ -96,7 +103,7 @@ userSchema.methods.getResetPasswordToken = function () {
     
     const resetToken = crypto.randomBytes(20).toString("hex");
     this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
-    this.resetPasswordExpire = Date.now + 15 * 60 * 1000;
+    this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
 
     return resetToken;
 

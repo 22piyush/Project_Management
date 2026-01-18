@@ -76,7 +76,7 @@ export function generateForgotPasswordEmailTemplate(resetPasswordUrl) {
       </p>
 
       <p>
-        This password reset link will expire in a limited time for your security.
+        This password reset link will expire in a 15 minute for your security.
       </p>
 
       <div class="footer">
