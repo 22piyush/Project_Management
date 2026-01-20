@@ -16,4 +16,45 @@ export const createStudent = asyncHandler(async (req, res, next) => {
         message: "Student created successfully",
         data: { user },
     });
+});
+
+
+export const updateStudent = asyncHandler(async (req, res, next) => {
+
+    const { id } = req.params;
+    const updateData = { ...req.body };
+    delete updateData.role;
+
+    const user = await userServices.updateUser(id, updateData);
+    if(!user){
+        return next(new ErrorHandler("Student not found", 404));
+    }
+
+    res.status(201).json({
+        success: true,
+        message: "Student updated successfully",
+        data: { user },
+    });
+
+});
+
+
+export const deleteStudent = asyncHandler(async (req, res, next) => {
+
+    const {id} = req.params;
+    const user = await userServices.getUserById(id);
+    if(!user){
+        return next(new ErrorHandler("Student not found", 404));
+    }
+
+    if(user.role !== "Student"){
+        return next(new ErrorHandler("User is not student", 404));
+    }
+
+    await userServices.deleteUser(id);
+    res.status(201).json({
+        success: true,
+        message: "Student deleted successfully",
+    });
+
 })

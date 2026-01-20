@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.js";
 
 import authRouter from "./router/userRoutes.js";
+import adminRouter from "./router/adminRoutes.js";
 
 config();
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/admin", adminRouter);
 
 // Always Last 
 app.use(errorMiddleware)
