@@ -3,8 +3,7 @@ import ErrorHandler from "../middlewares/error.js";
 import { User } from "../models/user.js";
 import * as userServices from "../services/userServices.js";
 
-
-// ROLE :- STUDENT CONTROLLER 
+// ROLE :- STUDENT CONTROLLER
 
 // CREATE STUDENT
 export const createStudent = asyncHandler(async (req, res, next) => {
@@ -64,8 +63,7 @@ export const deleteStudent = asyncHandler(async (req, res, next) => {
   });
 });
 
-
-// ROLE :- TEACHER CONTROLLER 
+// ROLE :- TEACHER CONTROLLER
 
 // CREATE TEACHER
 export const createTeacher = asyncHandler(async (req, res, next) => {
@@ -120,7 +118,7 @@ export const updateTeacher = asyncHandler(async (req, res, next) => {
   });
 });
 
-// DELETE TEACHER 
+// DELETE TEACHER
 export const deleteTeacher = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const user = await userServices.getUserById(id);
@@ -139,15 +137,12 @@ export const deleteTeacher = asyncHandler(async (req, res, next) => {
   });
 });
 
-
-// ROLE:- ALL TEACHER, STUDENT USERS 
+// ROLE:- ALL TEACHER, STUDENT USERS
 export const getAllUsers = asyncHandler(async (req, res, next) => {
-
-    const {users} = await userServices.getAllUsers();
-    res.status(201).json({
-        success: true,
-        message: "User fetched successfully",
-        data: { users }
-    });
-
-})
+  const { users } = await userServices.getAllUsers();
+  res.status(201).json({
+    success: true,
+    message: "User fetched successfully",
+    data: { users },
+  });
+});
