@@ -38,6 +38,7 @@ import { getUser } from "./store/slices/authSlice";
 const App = () => {
 
   const { authUser, isCheckingAuth } = useSelector((state) => state.auth);
+  console.log(isCheckingAuth , authUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -45,6 +46,10 @@ const App = () => {
   }, [dispatch]);
 
   if(isCheckingAuth && !authUser){
+    console.log(isCheckingAuth , authUser);
+    
+    console.log("1111111111");
+    
     return(
       <div className="flex justify-center items-center h-screen">
         <Loader className="size-10 animate-spin"/>

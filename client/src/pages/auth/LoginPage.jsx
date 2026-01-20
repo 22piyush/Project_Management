@@ -8,7 +8,7 @@ const LoginPage = () => {
   const dispatch = useDispatch();
 
   const { isLoggingIn, authUser } = useSelector((state) => state.auth);
-
+  
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -69,7 +69,9 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (authUser) {
-      switch (formData.role) {
+      console.log(authUser);
+      // formData.role <-------  This is Previous Value here 
+      switch (authUser.role) {
         case "Student":
           navigate("/student");
           break;
