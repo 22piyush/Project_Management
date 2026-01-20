@@ -1,60 +1,153 @@
-import { asyncHandler } from "../middlewares/asyncHandler.js"
+import { asyncHandler } from "../middlewares/asyncHandler.js";
 import ErrorHandler from "../middlewares/error.js";
 import { User } from "../models/user.js";
-import * as userServices from "../services/userServices";
+import * as userServices from "../services/userServices.js";
 
+
+// ROLE :- STUDENT CONTROLLER 
+
+// CREATE STUDENT
 export const createStudent = asyncHandler(async (req, res, next) => {
+  const { name, email, password, department } = req.body;
+  if (!name || !email || !password || !department) {
+    return next(new ErrorHandler("Please provide all required fields", 400));
+  }
+  const user = await userServices.createUser({
+    name,
+    email,
+    password,
+    department,
+    role: "Student",
+  });
 
-    const { name, email, password, department } = req.body;
-    if (!name || !email || !password || !department) {
-        return next(new ErrorHandler("Please provide all required fields", 400))
-    }
-    const user = await userServices.createUser({ name, email, password, department, role: "Student" });
-
-    res.status(201).json({
-        success: true,
-        message: "Student created successfully",
-        data: { user },
-    });
+  res.status(201).json({
+    success: true,
+    message: "Student created successfully",
+    data: { user },
+  });
 });
 
-
+// UPDATE STUDENT
 export const updateStudent = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const updateData = { ...req.body };
+  delete updateData.role;
 
-    const { id } = req.params;
-    const updateData = { ...req.body };
-    delete updateData.role;
+  const user = await userServices.updateUser(id, updateData);
+  if (!user) {
+    return next(new ErrorHandler("Student not found", 404));
+  }
 
-    const user = await userServices.updateUser(id, updateData);
-    if(!user){
-        return next(new ErrorHandler("Student not found", 404));
-    }
+  res.status(201).json({
+    success: true,
+    message: "Student updated successfully",
+    data: { user },
+  });
+});
 
-    res.status(201).json({
-        success: true,
-        message: "Student updated successfully",
-        data: { user },
-    });
+// DELETE STUDENT
+export const deleteStudent = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await userServices.getUserById(id);
+  if (!user) {
+    return next(new ErrorHandler("Student not found", 404));
+  }
 
+  if (user.role !== "Student") {
+    return next(new ErrorHandler("User is not student", 404));
+  }
+
+  await userServices.deleteUser(id);
+  res.status(201).json({
+    success: true,
+    message: "Student deleted successfully",
+  });
 });
 
 
-export const deleteStudent = asyncHandler(async (req, res, next) => {
+// ROLE :- TEACHER CONTROLLER 
 
-    const {id} = req.params;
-    const user = await userServices.getUserById(id);
-    if(!user){
-        return next(new ErrorHandler("Student not found", 404));
-    }
+// CREATE TEACHER
+export const createTeacher = asyncHandler(async (req, res, next) => {
+  const { name, email, password, department, maxStudents, experties } =
+    req.body;
+  if (
+    !name ||
+    !email ||
+    !password ||
+    !department ||
+    !maxStudents ||
+    !experties
+  ) {
+    return next(new ErrorHandler("Please provide all required fields", 400));
+  }
+  const user = await userServices.createUser({
+    name,
+    email,
+    password,
+    department,
+    maxStudents,
+    experties: Array.isArray(experties)
+      ? experties
+      : typeof experties === "string" && experties.trim() !== ""
+        ? experties.split(",").map((s) => s.trim())
+        : [],
+    role: "Teacher",
+  });
 
-    if(user.role !== "Student"){
-        return next(new ErrorHandler("User is not student", 404));
-    }
+  res.status(201).json({
+    success: true,
+    message: "Teacher created successfully",
+    data: { user },
+  });
+});
 
-    await userServices.deleteUser(id);
+// UPDATE TEACHER
+export const updateTeacher = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const updateData = { ...req.body };
+  delete updateData.role;
+
+  const user = await userServices.updateUser(id, updateData);
+  if (!user) {
+    return next(new ErrorHandler("Teacher not found", 404));
+  }
+
+  res.status(201).json({
+    success: true,
+    message: "Teacher updated successfully",
+    data: { user },
+  });
+});
+
+// DELETE TEACHER 
+export const deleteTeacher = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await userServices.getUserById(id);
+  if (!user) {
+    return next(new ErrorHandler("Teacher not found", 404));
+  }
+
+  if (user.role !== "Teacher") {
+    return next(new ErrorHandler("User is not teacher", 404));
+  }
+
+  await userServices.deleteUser(id);
+  res.status(201).json({
+    success: true,
+    message: "Teacher deleted successfully",
+  });
+});
+
+
+// ROLE:- ALL TEACHER, STUDENT USERS 
+export const getAllUsers = asyncHandler(async (req, res, next) => {
+
+    const {users} = await userServices.getAllUsers();
     res.status(201).json({
         success: true,
-        message: "Student deleted successfully",
+        message: "User fetched successfully",
+        data: { users }
     });
 
 })

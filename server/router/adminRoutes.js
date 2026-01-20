@@ -1,6 +1,6 @@
 import express from "express";
 import  multer from "multer";
-import { isAuthenticated } from "../middlewares/authMiddleware.js";
+import { isAuthenticated, isAuthorized } from "../middlewares/authMiddleware.js";
 
 import { createStudent, deleteStudent, updateStudent } from "../controllers/adminController.js";
 

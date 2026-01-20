@@ -27,5 +27,6 @@ export const isAuthorized = ( ...roles ) => {
                 new ErrorHandler(`Role ${req.user.role} is not allowed to access this resource`, 403)
             )
         }
+        next();
     }
 }
