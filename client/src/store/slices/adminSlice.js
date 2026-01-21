@@ -127,6 +127,24 @@ const adminSlice = createSlice({
         state.users = action.payload.users;
     })
 
+    .addCase(createTeacher.fulfilled, (state, action) => {
+      if(state.users) state.users.unshift(action.payload);
+    })
+    .addCase(updateTeacher.fulfilled, (state, action) => {
+      if(state.users){
+        state.users.map((u) => u._id === action.payload._id ? {...u, ...action.payload} : u
+        );
+      } 
+    })
+    .addCase(deleteTeacher.fulfilled, (state, action) => {
+      if(state.users) 
+        state.users = state.users.filter((u) => u._id !== action.payload);
+    })
+    .addCase(getAllUsers.fulfilled, (state, action) => {
+      if(state.users) 
+        state.users = action.payload.users;
+    })
+
   },
 });
 
