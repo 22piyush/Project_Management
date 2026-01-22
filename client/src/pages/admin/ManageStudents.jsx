@@ -13,6 +13,8 @@ import { CheckCircle, Plus, TriangleAlert, Users, X } from "lucide-react";
 
 const ManageStudents = () => {
   const { users, projects } = useSelector((state) => state.admin);
+  console.log(users, projects);
+  
   const { isCreateStudentModalOpen } = useSelector((state) => state.popup);
 
   const [showModal, setShowModal] = useState(false);
@@ -31,6 +33,8 @@ const ManageStudents = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("Callles Get All User");
+    
     dispatch(getAllUsers());
   }, []);
 
@@ -66,11 +70,13 @@ const ManageStudents = () => {
       (student.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (student.email || "").toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesFilter =
-      filterDepartment === "all" || student.department === filterDepartment;
+    const matchesFilter = filterDepartment === "all" || student.department === filterDepartment;
 
     return matchesSearch && matchesFilter;
   });
+
+  console.log(filterStudents ,"Filter Students");
+  
 
   const handleCloseModel = () => {
     setShowModal(false);
@@ -364,7 +370,7 @@ const ManageStudents = () => {
           {/* Edit Student Modal  */}
           {
             showModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-normal z-50">
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold text-slate-900">

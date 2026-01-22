@@ -84,16 +84,19 @@ export const deleteTeacher = createAsyncThunk(
 });
 
 export const getAllUsers = createAsyncThunk(
-  "getAllUsers", 
-  async({id}, thunkAPI) => {
-    try{
+  "getAllUsers",                // must be string
+  async (_, thunkAPI) => {      //no unused param
+    try {
       const res = await axiosInstance.get("/admin/users");
       return res.data.data;
-    }catch(error){
-      toast.error(error.response?.data?.message || "Failed to fetched users");
-      return thunkAPI.rejectWithValue(error.response.data.message);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message
+      );
     }
-});
+  }
+);
+
 
 const adminSlice = createSlice({
   name: "admin",
