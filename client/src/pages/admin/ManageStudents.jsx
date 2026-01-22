@@ -59,8 +59,7 @@ const ManageStudents = () => {
     return Array.from(set);
   }, [students]);
 
-  console.log(departments,"dept");
-  
+  console.log(departments, "dept");
 
   const filterStudents = students.filter((student) => {
     const matchesSearch =
@@ -232,27 +231,105 @@ const ManageStudents = () => {
           </div>
         </div>
 
-
         {/* STUDENTS TABLE  */}
         <div className="card">
           <div className="card-header">
-              <h2 className="card-title">Student List</h2>
+            <h2 className="card-title">Student List</h2>
           </div>
           <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">Student Info</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">Department & Year</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">Supervisor</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">Project Title</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide"></th>
-                    </tr>
-                </thead>
-              </table>
+            <table className="w-full">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    Student Info
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    Department & Year
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    Supervisor
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    Project Title
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-slate-200">
+                {
+                  filterStudents.map(student => {
+                    return(
+                      <tr key={student._id} className="hover:bg-slate-50">
+                        <td className="px-6 py-4">
+                          <div>
+                            <div className="text-sm font-medium text-slate-900">
+                              {student.name}
+                            </div>
+                            <div className="text-sm text-slate-500">
+                              {student.email}
+                            </div>
+                            {
+                              student.studentId && (
+                                <div className="text-xs text-slate-400">
+                                  ID: {student.studentId}
+                                </div>
+                              )
+                            }
+                          </div>
+                        </td>
+
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-slate-900">
+                              {student.department || "--"}
+                            </div>
+                            <div className="text-sm text-slate-500">
+                              {
+                                student.createdAt ? new Date(student.createdAt).getFullYear() : "-"
+                              }
+                            </div>
+                        </td>
+
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-slate-900">
+                              {student.department || "--"}
+                            </div>
+                            <div className="text-sm text-slate-500">
+                              {
+                                student.createdAt ? new Date(student.createdAt).getFullYear() : "-"
+                              }
+                            </div>
+                        </td>
+
+                         <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-slate-900">
+                              {student.department || "--"}
+                            </div>
+                            <div className="text-sm text-slate-500">
+                              {
+                                student.supervisor ? (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full 
+                                  text-green-800 bg-gray-100 text-xs font-medium">
+                                    {typeof student.supervisor === "object" ? student.supervisor.name || "-" : student.supervisor}
+                                  </span>
+                                ):(
+                                   <span className="inline-flex items-center px-2 py-0.5 rounded-full 
+                                  text-red-800 bg-red-100 text-xs font-medium">
+                                    {student.projectStatus === "rejected" ? "Rejected" : "Not Assigned"}
+                                  </span>
+                                )
+                              }
+                            </div>
+                        </td>
+                      </tr>
+                    )
+                  })
+                }
+              </tbody>
+            </table>
           </div>
         </div>
-
       </div>
     </>
   );
