@@ -9,7 +9,7 @@ import {
 } from "../../store/slices/adminSlice";
 import toggleStudentModal from "../../store/slices/popupSlice";
 
-import { CheckCircle, Plus, TriangleAlert, Users, X } from "lucide-react";
+import { AlertTriangle, CheckCircle, Plus, TriangleAlert, Users, X } from "lucide-react";
 
 const ManageStudents = () => {
   const { users, projects } = useSelector((state) => state.admin);
@@ -110,7 +110,11 @@ const ManageStudents = () => {
   };
 
   const handleDelete = (student) => {
+    console.log(student);
+    
     setStudentToDelete(student);
+    console.log(student);
+    
     setShowDeleteModal(true);
   };
 
@@ -429,13 +433,18 @@ const ManageStudents = () => {
           )}
 
           {
-            showDeleteModal && studentToDelete (
+            showDeleteModal && studentToDelete && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-xl">
                   <div className="flex items-center mb-4">
                     <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-fullbg-red-100">
-
+                      <AlertTriangle className="w-6 h-6 text-red-600"/>
                     </div>
+
+                    <div className="text-center ">
+                          
+                    </div>
+
                   </div>
                 </div>
               </div>  
