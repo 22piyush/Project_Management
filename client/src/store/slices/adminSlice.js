@@ -140,10 +140,6 @@ const adminSlice = createSlice({
       if(state.users) 
         state.users = state.users.filter((u) => u._id !== action.payload);
     })
-    .addCase(getAllUsers.fulfilled, (state, action) => {
-      if(state.users) 
-        state.users = action.payload.users;
-    })
 
   },
 });
