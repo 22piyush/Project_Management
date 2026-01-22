@@ -436,13 +436,21 @@ const ManageStudents = () => {
             showDeleteModal && studentToDelete && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-xl">
-                  <div className="flex items-center mb-4">
+                  <div className="flex flex-col items-center mb-4">
                     <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-fullbg-red-100">
                       <AlertTriangle className="w-6 h-6 text-red-600"/>
                     </div>
 
-                    <div className="text-center ">
-                          
+                    <div className="text-center">
+                      <h3 className="text-lg font-medium text-slate-900">Delete Student</h3>   
+                      <p className="text-sm text-slate-500 mb-4">Are You sure you want to delete?{" "} 
+                        <span>{studentToDelete.name} ? This action cannot be undone.</span>
+                      </p>
+                    </div>
+
+                    <div className="flex justify-center space-x-3">
+                      <button onClick={cancelDelete} className="btn-secondary">Cancel</button>
+                      <button onClick={confirmDelete} className="btn-danger">Delete</button>
                     </div>
 
                   </div>
@@ -450,6 +458,9 @@ const ManageStudents = () => {
               </div>  
             )
           }
+
+
+          {isCreateStudentModalOpen && <AddStudent/>}
         </div>
       </div>
     </>
