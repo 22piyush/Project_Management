@@ -7,7 +7,7 @@ import {
   getAllUsers,
   updateStudent,
 } from "../../store/slices/adminSlice";
-import toggleStudentModal from "../../store/slices/popupSlice";
+import { toggleStudentModal } from "../../store/slices/popupSlice";
 
 import { AlertTriangle, CheckCircle, Plus, TriangleAlert, Users, X } from "lucide-react";
 
