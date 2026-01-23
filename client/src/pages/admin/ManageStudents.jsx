@@ -274,11 +274,7 @@ const ManageStudents = () => {
                         <div className="text-sm text-slate-500">
                           {student.email}
                         </div>
-                        {student.studentId && (
-                          <div className="text-xs text-slate-400">
-                            ID: {student.studentId}
-                          </div>
-                        )}
+                       
                       </div>
                     </td>
 
