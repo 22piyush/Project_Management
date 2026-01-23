@@ -71,7 +71,18 @@ const projectSchema = new mongoose.Schema({
                 maxlength: [2000 , "Feedback cannot be more than 1000 charecter"]
             }
         }
-    ]
-},{
+    ],
+    deadline: {
+        type: Date,
+    }
+},
+{
     timestamps: true,
-});
+}
+);
+
+
+// Indexing for better query performance
+projectSchema.index({student: 1});
+projectSchema.index({supervisor: 1});
+projectSchema.index({status: 1});
