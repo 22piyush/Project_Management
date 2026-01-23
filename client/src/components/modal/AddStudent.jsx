@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createStudent } from "../../store/slices/adminSlice";
+import { toggleStudentModal } from "../../store/slices/popupSlice";
+import { X } from "lucide-react";
 
 const AddStudent = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const AddStudent = () => {
       department: "",
       password: "",
     });
+    dispatch(toggleStudentModal());
   };
 
   return (
@@ -29,17 +32,17 @@ const AddStudent = () => {
         <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-slate-900">
-              Create Student
+              Add Student
             </h3>
             <button
-              onClick={handleCloseModel}
+              onClick={() => dispatch(toggleStudentModal())}
               className="text-slate-400 hover:text-slate-600"
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleCreateStudent} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
                 Full Name
@@ -64,6 +67,20 @@ const AddStudent = () => {
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
+                }
+                className="input-field w-full py-1 border-b border-slate-600 focus:outline-none"
+              />
+            </div>
+             <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Password
+              </label>
+              <input
+                type="password"
+                required
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
                 }
                 className="input-field w-full py-1 border-b border-slate-600 focus:outline-none"
               />
@@ -95,13 +112,13 @@ const AddStudent = () => {
             <div className="flex justify-end space-x-3 pt-4">
               <button
                 type="button"
-                onClick={handleCloseModel}
+                onClick={() => dispatch(toggleStudentModal())}
                 className="btn-danger"
               >
                 Cancel
               </button>
               <button type="submit" className="btn-primary">
-                Update Student
+                Add Student
               </button>
             </div>
           </form>

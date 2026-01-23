@@ -146,7 +146,7 @@ const ManageStudents = () => {
 
             <button
               onClick={() => dispatch(toggleStudentModal())}
-              className="btn-primar flex items-center space-x-2 mt-4 md:mt-0"
+              className="btn-primary flex items-center space-x-2 mt-4 md:mt-0"
             >
               <Plus className="w-5 h-5" />
               <span>Add New Student</span>
@@ -228,7 +228,7 @@ const ManageStudents = () => {
               <select
                 className="input-field w-full"
                 value={filterDepartment}
-                onChange={(e) => e.target.value}
+                onChange={(e) => setFilterDepartment(e.target.value)}
               >
                 <option value="all">All Departments</option>
                 {departments.map((dept) => (
