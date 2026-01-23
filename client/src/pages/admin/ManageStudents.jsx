@@ -13,10 +13,7 @@ import { AlertTriangle, CheckCircle, Plus, TriangleAlert, Users, X } from "lucid
 
 const ManageStudents = () => {
   const { users, projects } = useSelector((state) => state.admin);
-  console.log(users, projects);
-
   const { isCreateStudentModalOpen } = useSelector((state) => state.popup);
-
   const [showModal, setShowModal] = useState(false);
   const [editingStudent, setEditingStudent] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -93,8 +90,6 @@ const ManageStudents = () => {
 
     if (editingStudent) {
       dispatch(updateStudent({ id: editingStudent._id, data: formData }));
-    } else {
-      dispatch(createStudent(formData));
     }
     handleCloseModel();
   };
