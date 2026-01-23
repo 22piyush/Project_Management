@@ -32,7 +32,7 @@ export const updateStudent = createAsyncThunk(
 
 export const deleteStudent = createAsyncThunk(
   "deleteStudent", 
-  async({id}, thunkAPI) => {
+  async(id, thunkAPI) => {
     try{
       const res = await axiosInstance.delete(`/admin/delete-student/${id}`);
       toast.success(res.data.message || "Student delete successfully");
@@ -72,7 +72,8 @@ export const updateTeacher = createAsyncThunk(
 
 export const deleteTeacher = createAsyncThunk(
   "deleteTeacher", 
-  async({id}, thunkAPI) => {
+  async(id, thunkAPI) => {
+    
     try{
       const res = await axiosInstance.delete(`/admin/delete-teacher/${id}`);
       toast.success(res.data.message || "Teacher delete successfully");

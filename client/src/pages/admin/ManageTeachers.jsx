@@ -7,7 +7,7 @@ import {
   getAllUsers,
   updateTeacher,
 } from "../../store/slices/adminSlice";
-import { BadgeCheck, CheckCircle, Plus, Users, X } from "lucide-react";
+import { AlertTriangle, BadgeCheck, CheckCircle, Plus, TriangleAlert, Users, X } from "lucide-react";
 import { toggleTeacherModal } from "../../store/slices/popupSlice";
 
 const ManageTeachers = () => {
@@ -30,12 +30,9 @@ const ManageTeachers = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, []);
 
   const teachers = useMemo(() => {
-    (users || []).filter((u) => u.role?.toLowerCase() === "teacher");
+    return (users || []).filter((u) => u.role?.toLowerCase() === "teacher");
   }, [users]);
 
   const departments = useMemo(() => {
@@ -101,7 +98,9 @@ const ManageTeachers = () => {
 
   const confirmDelete = () => {
     if (teacherToDelete) {
-      dispatch(deleteTeacher(teacherToDelete._id));
+      console.log(teacherToDelete,teacherToDelete._id, "deleteeeeeeeeeeeee");
+      
+     dispatch(deleteTeacher(teacherToDelete._id));
       setShowDeleteModal(false);
       setTeacherToDelete(null);
     }
@@ -294,7 +293,7 @@ const ManageTeachers = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-slate-900">
                         {teacher.createdAt
-                          ? new Date(teacher.createdAt).toLowerCase()
+                          ? new Date(teacher.createdAt).toLocaleDateString()
                           : "-"}
                       </div>
                     </td>

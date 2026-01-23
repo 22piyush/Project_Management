@@ -29,12 +29,6 @@ const ManageStudents = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log("Callles Get All User");
-
-    dispatch(getAllUsers());
-  }, []);
-
   const students = useMemo(() => {
     const studentUsers = (users || []).filter(
       (u) => u.role?.toLowerCase() === "student",
