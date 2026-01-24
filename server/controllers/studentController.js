@@ -56,4 +56,12 @@ export const submitProposal = asyncHandler(async (req, res, next) => {
 });
 
 
-export const uploadFiles
+export const uploadFiles = asyncHandler(async, (req, res, next) => {
+    const { projectId } = req.params;
+    const studentId = req.user._id;
+    const project = await projectServices.getProjectById(projectId);
+
+    if(!project || project.student.toString() !== studentId.toString()){
+
+    }
+})

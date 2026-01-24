@@ -7,5 +7,9 @@ export const getProjectByStudent = async (studentId) => {
 
 
 export const createProject = async(projectData) => {
-    
-}
+
+    const project = new Project(projectData);
+    await  project.save();
+    return project;
+
+};
