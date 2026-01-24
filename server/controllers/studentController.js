@@ -40,7 +40,7 @@ export const submitProposal = asyncHandler(async (req, res, next) => {
     const projectData = {
         student: studentId,
         title,
-        description
+        description,
     };
 
     const project = await projectServices.createProject(projectData);
@@ -50,18 +50,33 @@ export const submitProposal = asyncHandler(async (req, res, next) => {
     res.status(200).json({
         success: true,
         data: { project },
-        message: "Project proposal submitted successfully."
+        message: "Project proposal submitted successfully.",
     });
-    
 });
 
-
-export const uploadFiles = asyncHandler(async, (req, res, next) => {
+export const uploadFiles = asyncHandler(async (req, res, next) => {
     const { projectId } = req.params;
     const studentId = req.user._id;
     const project = await projectServices.getProjectById(projectId);
 
-    if(!project || project.student.toString() !== studentId.toString()){
-
+    if (!project || project.student.toString() !== studentId.toString()) {
+        return next(
+            new ErrorHandler("Not authorised to upload files to this project.", 403),
+        );
     }
-})
+
+    if (!req.files || req.files.length === 0) {
+        return next(new ErrorHandler("No files uploaded.", 400));
+    }
+
+    const updatedProject = await projectServices.addFilesToProject(
+        projectId,
+        req.files,
+    );
+
+    res.status(200).json({
+        success: true,
+        message: "Files uploaded successfully",
+        data: { project: updatedProject }
+    });
+});
