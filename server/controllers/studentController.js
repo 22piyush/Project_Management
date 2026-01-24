@@ -69,14 +69,18 @@ export const uploadFiles = asyncHandler(async (req, res, next) => {
         return next(new ErrorHandler("No files uploaded.", 400));
     }
 
-    const updatedProject = await projectServices.addFilesToProject(
-        projectId,
-        req.files,
-    );
+    const updatedProject = await projectServices.addFilesToProject(projectId, req.files);
 
     res.status(200).json({
         success: true,
         message: "Files uploaded successfully",
         data: { project: updatedProject }
     });
+});
+
+
+export const getAvailableSupervisors = asyncHandler( async(req, res, next) => {
+
+    
+
 });
