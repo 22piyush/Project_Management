@@ -107,6 +107,29 @@ const App = () => {
           <Route path="deadlines" element={<DeadlinesPage />} />
           <Route path="projects" element={<ProjectsPage />} />
         </Route>
+
+
+        
+        {/* Studnt Routes */}
+        <Route
+          path="/student"
+          element={
+            <ProtectedRoute allowedRoles={["Student"]}>
+              <DashboardLayout userRole={"Student"}/>
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<StudentDashboard />} />
+          <Route path="submit-proposal" element={<SubmitProposal />} />
+          <Route path="upload-files" element={<UploadFiles />} />
+          <Route path="supervisor" element={<SupervisorPage />} />
+          <Route path="feedback" element={<FeedbackPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+        </Route>
+
+
+
+
       </Routes>
       <ToastContainer theme="dark" />
     </BrowserRouter>
