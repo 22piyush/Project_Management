@@ -153,4 +153,11 @@ export const requestSupervisor = asyncHandler(async (req, res, next) => {
         "medium"
     );
 
+
+    res.status(201).json({
+        success: true,
+        data: { request },
+        message: "Supervisor request submitted successfully"
+    });
+
 })
