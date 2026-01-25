@@ -8,6 +8,8 @@ import {
   fetchProject,
 } from "../../store/slices/studentSlice";
 
+import { X } from "lucide-react";
+
 const SupervisorPage = () => {
   const dispatch = useDispatch();
   const { authUser } = useSelector((state) => state.auth);
@@ -215,7 +217,6 @@ const SupervisorPage = () => {
         )}
 
         {/* AVAILABLE SUPERVISOR | ONLY WHEN PROJECT EXISTS AND NO SUPERVISOR ASSIGNED  */}
-
         {hasProject && !hasSupervisor && (
           <div className="card">
             <div className="card-header">
@@ -226,8 +227,8 @@ const SupervisorPage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-              {supervisor &&
-                supervisor.map((sup) => (
+              {supervisors &&
+                supervisors.map((sup) => (
                   <div
                     key={sup._id}
                     className="border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -263,15 +264,82 @@ const SupervisorPage = () => {
                         </label>
                         <p className="text-sm text-slate-700">
                           {Array.isArray(sup?.experties)
-                          ? sup.experties.join(", ")
-                          : sup?.experties || "-"}
+                            ? sup.experties.join(", ")
+                            : sup?.experties || "-"}
                         </p>
                       </div>
 
-                      <button></button>
+                      <button
+                        onClick={() => handleOpenRequest(sup)}
+                        className="btn-primary w-full"
+                      >
+                        Request Supervisor
+                      </button>
                     </div>
                   </div>
                 ))}
+            </div>
+          </div>
+        )}
+
+        {/* REQUEST MODAL  */}
+        {showRequestModel && selectedSupervisor && (
+          <div className="model-overlay">
+            <div className="model-content">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800">
+                    Request Supervision
+                  </h3>
+                  <button
+                    className="text-slate-400 hover:text-slate-600"
+                    onClick={() => {
+                      setShowRequestModel(false);
+                      setSelectedSupervisor(null);
+                      setRequestMessage("");
+                    }}
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-50 rounded-md">
+                    <p className="text-sm text-slate-600">
+                      {selectedSupervisor?.name}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="label">Message to Supervisor</label>
+                    <textarea
+                      className="input min-h-[120px]"
+                      value={requestMessage}
+                      onChange={(e) => setRequestMessage(e.target.value)}
+                      placeholder="Introduce Yourself and explain why you life this professor to supervise your project..."
+                    />
+                  </div>
+
+                  <div className="flex justify-end space-x-3 pt-4 border-t border-slate-200">
+                    <button
+                      onClick={() => {
+                        setShowRequestModel(false);
+                        setSelectedSupervisor(null);
+                        setRequestMessage("");
+                      }}
+                      className="btn-outline"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={submitRequest}
+                      className="btn-primary"
+                      disabled={!requestMessage.trim()}
+                    >
+                      Send Request{" "}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
