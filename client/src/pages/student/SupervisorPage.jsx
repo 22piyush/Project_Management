@@ -154,11 +154,124 @@ const SupervisorPage = () => {
                                   ? "bg-red-100 text-red-800"
                                   : "bg-gray-100 text-gray-800"
                           }`}
-                      >{project?.status || "Invalid"}</span>
+                      >
+                        {project?.status || "Invalid"}
+                      </span>
                     </div>
                   </div>
                 </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-slate-500 uppercase tracking-wide">
+                      Deadline
+                    </label>
+                    <p className="text-lg font-semibold text-slate-800 mt-1">
+                      {project?.deadline
+                        ? formatDeadline(project.deadline)
+                        : "No deadline yet"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-500 uppercase tracking-wide">
+                      Created
+                    </label>
+                    <p className="text-lg font-semibold text-slate-800 mt-1">
+                      {project?.createdAt
+                        ? formatDeadline(project.createdAt)
+                        : "Unknown"}
+                    </p>
+                  </div>
+                </div>
               </div>
+
+              {project?.description && (
+                <div>
+                  <label className="text-sm font-medium text-slate-500 uppercase tracking-wide">
+                    Description
+                  </label>
+                  <p className="leading-relaxed text-slate-700 mt-2">
+                    {project?.description || "-"}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* IF NO PROJECT */}
+        {!hasProject && (
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">Project Required</h2>
+            </div>
+            <div className="p-6 text-center">
+              <p className="text-state-600 text-lg">
+                You have not submitted any project proposal yet, so you cannot
+                request a supervisor.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* AVAILABLE SUPERVISOR | ONLY WHEN PROJECT EXISTS AND NO SUPERVISOR ASSIGNED  */}
+
+        {hasProject && !hasSupervisor && (
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">Availabe Supervisor</h2>
+              <p className="card-subtitle">
+                Browse and request supervision from availabe faculty members.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+              {supervisor &&
+                supervisor.map((sup) => (
+                  <div
+                    key={sup._id}
+                    className="border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center space-x-3 mb-3">
+                      <div className="w-12 h-12 bg-slate-300 rounded-full flex itms-center justify-center">
+                        <span className="text-sm font-bold text-slate-600">
+                          {sup.name || "Anonymous"}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium text-slate-800">
+                          {sup.name}
+                        </h4>
+                        <p className="text-sm text-slate-600">
+                          {sup.department}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 mb-4">
+                      <div>
+                        <label className="text-xs font-medium text-slate-500">
+                          Email
+                        </label>
+                        <p className="text-sm text-slate-700">
+                          {sup.email || "-"}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-slate-500">
+                          Experties
+                        </label>
+                        <p className="text-sm text-slate-700">
+                          {Array.isArray(sup?.experties)
+                          ? sup.experties.join(", ")
+                          : sup?.experties || "-"}
+                        </p>
+                      </div>
+
+                      <button></button>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         )}
