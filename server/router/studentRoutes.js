@@ -35,7 +35,7 @@ router.post(
   submitProposal,
 );
 router.post(
-  "upload/:projectId",
+  "/upload/:projectId",
   isAuthenticated,
   isAuthorized("Student"),
   upload.array("files", 10),
