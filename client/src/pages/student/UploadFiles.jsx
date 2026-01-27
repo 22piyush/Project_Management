@@ -1,9 +1,14 @@
 import { act, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { fetchProject, uploadFiles } from "../../store/slices/studentSlice";
+import {
+  downloadFile,
+  fetchProject,
+  uploadFiles,
+} from "../../store/slices/studentSlice";
 import {
   Archive,
+  Download,
   File,
   FileCode,
   FilePlus,
@@ -63,6 +68,26 @@ const UploadFiles = () => {
             : "text-slate-500";
 
     return <Icon className={`w-8 h-8 ${color}`} />;
+  };
+
+  const handleDownloadFile = async (file) => {
+    if (!file?.projectId || !file.fileId) return;
+
+    const res = await dispatch(
+      downloadFile({ projectId: file.projectId, file: file.fileId }),
+    );
+
+    if (res.meta.requestStatus !== "fulfilled") return;
+
+    const url = URL.createObjectURL(res.payload.blob);
+
+    const a = Object.assign(document.createElement("a"), {
+      href: url,
+      download: file.name || "download",
+    });
+
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -248,7 +273,12 @@ const UploadFiles = () => {
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <button className="btn-outline btn-small">Download</button>
+                    <button
+                      onClick={() => handleDownloadFile(file)}
+                      className="btn-outline btn-small"
+                    >
+                      Download
+                    </button>
                   </div>
                 </div>
               ))}

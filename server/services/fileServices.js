@@ -1,5 +1,5 @@
 import fs from "fs";
-import ErrorHandler from "../middlewares/error";
+import ErrorHandler from "../middlewares/error.js";
 
 export const streamDownload = (filePath, res, originalName) => {
 
@@ -20,6 +20,11 @@ export const streamDownload = (filePath, res, originalName) => {
                 error: error.message,
             });
         }
+
+        return res.status(500).json({
+            success: false,
+            error: "Error streaming file"
+        });
     }
 
 }

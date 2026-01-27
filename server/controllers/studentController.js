@@ -5,6 +5,7 @@ import * as userServices from "../services/userServices.js";
 import * as projectServices from "../services/projectServices.js";
 import * as requestServices from "../services/requestServices.js";
 import * as notificationServices from "../services/notificationServices.js";
+import * as fileServices from "../services/fileServices.js";
 import { Project } from "../models/project.js";
 import { Notification } from "../models/notification.js";
 
@@ -249,7 +250,7 @@ export const downloadFile = asyncHandler(async (req, res, next) => {
     const file = project.file.id(fileId);
     if (!file) return next(new ErrorHandler("File not found", 404));
 
-    streamDownload(file.fileUrl, res, file.originalName);
+    fileServices.streamDownload(file.fileUrl, res, file.originalName);
 
-})
+});
 
