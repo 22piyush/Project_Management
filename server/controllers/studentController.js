@@ -5,6 +5,8 @@ import * as userServices from "../services/userServices.js";
 import * as projectServices from "../services/projectServices.js";
 import * as requestServices from "../services/requestServices.js";
 import * as notificationServices from "../services/notificationServices.js";
+import { Project } from "../models/project.js";
+import { Notification } from "../models/notification.js";
 
 export const getStudentProject = asyncHandler(async (req, res, next) => {
     const studentId = req.user._id;
@@ -71,42 +73,42 @@ export const uploadFiles = asyncHandler(async (req, res, next) => {
         return next(new ErrorHandler("No files uploaded.", 400));
     }
 
-    const updatedProject = await projectServices.addFilesToProject(projectId, req.files);
+    const updatedProject = await projectServices.addFilesToProject(
+        projectId,
+        req.files,
+    );
 
     res.status(200).json({
         success: true,
         message: "Files uploaded successfully",
-        data: { project: updatedProject }
+        data: { project: updatedProject },
     });
 });
 
-
-export const getAvailableSupervisors = asyncHandler( async(req, res, next) => {
-
-    const supervisors = await User.find({role: "Teacher"})
-    .select("name email department experties")
-    .lean();
+export const getAvailableSupervisors = asyncHandler(async (req, res, next) => {
+    const supervisors = await User.find({ role: "Teacher" })
+        .select("name email department experties")
+        .lean();
 
     res.status(200).json({
         success: true,
         data: { supervisors },
-        message: "Available supervisor fetched successfully"
+        message: "Available supervisor fetched successfully",
     });
-
 });
 
-
 export const getSupervisor = asyncHandler(async (req, res, next) => {
-
     const studentId = req.user._id;
-    const student = await User.findById(studentId)
-    .populate("supervisor", "name email department experties");
+    const student = await User.findById(studentId).populate(
+        "supervisor",
+        "name email department experties",
+    );
 
-    if(!student.supervisor){
+    if (!student.supervisor) {
         return res.status(200).json({
             success: true,
             data: { supervisor: null },
-            message: "No supervisor assigned yet"
+            message: "No supervisor assigned yet",
         });
     }
 
@@ -114,33 +116,37 @@ export const getSupervisor = asyncHandler(async (req, res, next) => {
         success: true,
         data: { supervisor: student.supervisor },
     });
-
 });
 
-
 export const requestSupervisor = asyncHandler(async (req, res, next) => {
-
-    const {teacherId, message} = req.body;
+    const { teacherId, message } = req.body;
     const studentId = req.user._id;
 
     const student = await User.findById(studentId);
-    if(student.supervisor){
-        return next(new ErrorHandler("You already have a supervisor assigned", 400));
+    if (student.supervisor) {
+        return next(
+            new ErrorHandler("You already have a supervisor assigned", 400),
+        );
     }
 
     const supervisor = await User.findById(teacherId);
-    if(!supervisor || supervisor.role !== "Teacher"){
+    if (!supervisor || supervisor.role !== "Teacher") {
         return next(new ErrorHandler("Invalid supervisor selected.", 400));
     }
 
-    if(supervisor.maxStudents === supervisor.assignedStudents.length){
-        return next(new ErrorHandler("Selected supervisor has reached maximum student capacity.", 400));
+    if (supervisor.maxStudents === supervisor.assignedStudents.length) {
+        return next(
+            new ErrorHandler(
+                "Selected supervisor has reached maximum student capacity.",
+                400,
+            ),
+        );
     }
 
     const requestData = {
         student: studentId,
         supervisor: teacherId,
-        message
+        message,
     };
 
     const request = await requestServices.createRequest(requestData);
@@ -150,18 +156,55 @@ export const requestSupervisor = asyncHandler(async (req, res, next) => {
         `${student.name} has request ${supervisor.name} to be their supervisor.`,
         "request",
         "/teacher/request",
-        "medium"
+        "medium",
     );
-
 
     res.status(201).json({
         success: true,
         data: { request },
-        message: "Supervisor request submitted successfully"
+        message: "Supervisor request submitted successfully",
     });
-
 });
 
+export const getDashboardState = asyncHandler(async (req, res, next) => {
+    const studentId = req.user._id;
+
+    const project = await Project.findOne({ student: studentId })
+        .sort({ createdAt: -1 })
+        .populate("supervisor", "name")
+        .lean();
+
+    const now = new Date();
+    const upcomingDeadlines = await Project.find({ student: studentId, deadline: { $gte: now } })
+        .select("title description")
+        .sort({ createdAt: 1 })
+        .limit(3)
+        .lean();
+
+    const topNotification = await Notification.find({ user: studentId })
+        .populate("user", "name")
+        .sort({ createdAt: -1 })
+        .limit(3)
+        .lean();
+
+    const feedbackNotifications =
+        project?.feedback && project?.feedback.length > 0 
+        ? project.feedback
+        .sort((a , b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0,2) : []
 
 
+        const supervisorName = project?.supervisor?.name || null;
 
+        res.status(200).json({
+            success: true,
+            message: "Dashboard Stats fetched successfully",
+            data:{
+                project,
+                upcomingDeadlines,
+                topNotification,
+                feedbackNotifications,
+                supervisorName
+            }
+        })
+});
