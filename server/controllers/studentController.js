@@ -188,25 +188,25 @@ export const getDashboardState = asyncHandler(async (req, res, next) => {
         .lean();
 
     const feedbackNotifications =
-        project?.feedback && project?.feedback.length > 0 
-        ? project.feedback
-        .sort((a , b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0,2) : []
+        project?.feedback && project?.feedback.length > 0
+            ? project.feedback
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .slice(0, 2) : []
 
 
-        const supervisorName = project?.supervisor?.name || null;
+    const supervisorName = project?.supervisor?.name || null;
 
-        res.status(200).json({
-            success: true,
-            message: "Dashboard Stats fetched successfully",
-            data:{
-                project,
-                upcomingDeadlines,
-                topNotification,
-                feedbackNotifications,
-                supervisorName
-            }
-        })
+    res.status(200).json({
+        success: true,
+        message: "Dashboard Stats fetched successfully",
+        data: {
+            project,
+            upcomingDeadlines,
+            topNotification,
+            feedbackNotifications,
+            supervisorName
+        }
+    })
 });
 
 
@@ -217,16 +217,39 @@ export const getFeedback = asyncHandler(async (req, res, next) => {
 
     const project = await projectServices.getProjectById(projectId);
 
-    if(!project || project.student.toString() !== studentId.toString()){
+    if (!project || project.student.toString() !== studentId.toString()) {
         return next(new ErrorHandler("Not authorised to view feedback for this project", 403));
     }
 
-    const sortedFeedback = project.feedback.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const sortedFeedback = project.feedback.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     res.status(200).json({
         success: true,
         data: { feedback: sortedFeedback }
     })
+
+});
+
+
+export const downloadFile = asyncHandler(async (req, res, next) => {
+
+    const { projectId, fileId } = req.params;
+    const studentId = req.user_id;
+
+
+    const project = await projectServices.getProjectById(projectId);
+    if (!project) return next(new ErrorHandler("Project not found", 404));
+
+    if (project.student.toString() !== studentId.toString()) {
+        return next(
+            new ErrorHandler("Not authorised to download files.", 403),
+        );
+    }
+
+    const file = project.file.id(fileId);
+    if (!file) return next(new ErrorHandler("File not found", 404));
+
+    streamDownload(file.fileUrl, res, file.originalName);
 
 })
 

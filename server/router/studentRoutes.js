@@ -8,6 +8,7 @@ import {
 import { handleUploadError, upload } from "../middlewares/upload.js";
 
 import {
+  downloadFile,
   getAvailableSupervisors,
   getDashboardState,
   getFeedback,
@@ -74,6 +75,13 @@ router.get(
   isAuthenticated,
   isAuthorized("Student"),
   getDashboardState
+);
+
+router.get(
+  "/download/:projectId/:fleId",
+  isAuthenticated,
+  isAuthorized("Student"),
+  downloadFile
 );
 
 export default router;
