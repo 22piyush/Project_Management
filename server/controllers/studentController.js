@@ -223,7 +223,10 @@ export const getFeedback = asyncHandler(async (req, res, next) => {
 
     const sortedFeedback = project.feedback.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    
+    res.status(200).json({
+        success: true,
+        data: { feedback: sortedFeedback }
+    })
 
 })
 

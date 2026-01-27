@@ -5,13 +5,12 @@ import {
   isAuthorized,
 } from "../middlewares/authMiddleware.js";
 
-import {
-  handleUploadError,
-  upload,
-} from "../middlewares/upload.js";
+import { handleUploadError, upload } from "../middlewares/upload.js";
 
 import {
   getAvailableSupervisors,
+  getDashboardState,
+  getFeedback,
   getStudentProject,
   getSupervisor,
   requestSupervisor,
@@ -43,14 +42,38 @@ router.post(
   uploadFiles,
 );
 
-router.get("/fetch-supervisor", isAuthenticated, isAuthorized("Student"), getAvailableSupervisors);
-router.get("/supervisor", isAuthenticated, isAuthorized("Student"), getSupervisor);
+router.get(
+  "/fetch-supervisor",
+  isAuthenticated,
+  isAuthorized("Student"),
+  getAvailableSupervisors,
+);
+router.get(
+  "/supervisor",
+  isAuthenticated,
+  isAuthorized("Student"),
+  getSupervisor,
+);
 
 router.post(
   "/request-supervisor",
   isAuthenticated,
   isAuthorized("Student"),
   requestSupervisor,
+);
+
+router.get(
+  "/feedback/:projectId",
+  isAuthenticated,
+  isAuthorized("Student"),
+  getFeedback
+);
+
+router.get(
+  "/fetch-dashboard-stats",
+  isAuthenticated,
+  isAuthorized("Student"),
+  getDashboardState
 );
 
 export default router;
