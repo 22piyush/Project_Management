@@ -208,3 +208,22 @@ export const getDashboardState = asyncHandler(async (req, res, next) => {
             }
         })
 });
+
+
+export const getFeedback = asyncHandler(async (req, res, next) => {
+
+    const { projectId } = req.params;
+    const studentId = req.user_id;
+
+    const project = await projectServices.getProjectById(projectId);
+
+    if(!project || project.student.toString() !== studentId.toString()){
+        return next(new ErrorHandler("Not authorised to view feedback for this project", 403));
+    }
+
+    const sortedFeedback = project.feedback.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    
+
+})
+
