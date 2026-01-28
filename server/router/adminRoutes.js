@@ -2,7 +2,7 @@ import express from "express";
 import  multer from "multer";
 import { isAuthenticated, isAuthorized } from "../middlewares/authMiddleware.js";
 
-import { createStudent, createTeacher, deleteStudent, deleteTeacher, getAllUsers, updateStudent, updateTeacher } from "../controllers/adminController.js";
+import { createStudent, createTeacher, deleteStudent, deleteTeacher, getAllProjects, getAllUsers, updateStudent, updateTeacher } from "../controllers/adminController.js";
 
 
 
@@ -17,6 +17,10 @@ router.delete("/delete-student/:id", isAuthenticated, isAuthorized("Admin"), del
 router.post("/create-teacher", isAuthenticated, isAuthorized("Admin"), createTeacher);
 router.put("/update-teacher/:id", isAuthenticated, isAuthorized("Admin"), updateTeacher);
 router.delete("/delete-teacher/:id", isAuthenticated, isAuthorized("Admin"), deleteTeacher);
+
+
+router.get("/projects", isAuthenticated, isAuthorized("Admin"), getAllProjects);
+
 
 
 // ROLE:- ALL TEACHER, STUDENT ROUTES 

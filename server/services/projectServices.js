@@ -42,3 +42,11 @@ export const addFilesToProject = async (projectId, files) => {
 
     return project;
 };
+
+
+export const getAllProjects = async()=>{
+
+    const projects = await Project.find();
+    return projects;
+
+}
