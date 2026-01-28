@@ -8,7 +8,6 @@ import * as notificationServices from "../services/notificationServices.js";
 import * as fileServices from "../services/fileServices.js";
 import { Project } from "../models/project.js";
 import { Notification } from "../models/notification.js";
-import { log } from "console";
 
 export const getStudentProject = asyncHandler(async (req, res, next) => {
     const studentId = req.user._id;
@@ -29,26 +28,10 @@ export const getStudentProject = asyncHandler(async (req, res, next) => {
 });
 
 export const submitProposal = asyncHandler(async (req, res, next) => {
-    console.log(req);
-    
     const { title, description } = req.body;
     const studentId = req.user._id;
-    console.log(studentId);
-    
-const existingProject = await Project.findOne({
-  student: studentId
-});
-console.log(existingProject);
 
-if (existingProject) {
-  return res.status(400).json({
-    message: "You already have a project"
-  });
-}
-return;
-    // const existingProject = await projectServices.getProjectByStudent(studentId);
-    // console.log(existingProject);
-    
+    const existingProject = await projectServices.getProjectByStudent(studentId);
 
     if (existingProject && existingProject.status !== "rejected") {
         return next(
@@ -60,7 +43,7 @@ return;
     }
 
 
-    if(existingProject !== "rejected"){
+    if (existingProject !== "rejected") {
         await Project.findByIdAndDelete(existingProject._id);
     }
 

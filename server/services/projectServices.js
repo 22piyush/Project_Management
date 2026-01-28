@@ -2,15 +2,7 @@ import ErrorHandler from "../middlewares/error.js";
 import { Project } from "../models/project.js";
 
 export const getProjectByStudent = async (studentId) => {
-    console.log(studentId,"11111111");
-    
-    const proj =  await Project
-  .find({ student: studentId })
-  .sort({ createdAt: -1 })
-  .limit(1);
-
-    console.log(proj);
-    
+    return await Project.findOne({ student: studentId }).sort({ createdAt: -1 });
 };
 
 export const createProject = async (projectData) => {
@@ -52,7 +44,7 @@ export const addFilesToProject = async (projectId, files) => {
 };
 
 
-export const getAllProjects = async()=>{
+export const getAllProjects = async () => {
 
     const projects = await Project.find();
     return projects;
