@@ -2,7 +2,15 @@ import ErrorHandler from "../middlewares/error.js";
 import { Project } from "../models/project.js";
 
 export const getProjectByStudent = async (studentId) => {
-    return await Project.findOne({ student: studentId }).sort({ createdAt: -1 });
+    console.log(studentId,"11111111");
+    
+    const proj =  await Project
+  .find({ student: studentId })
+  .sort({ createdAt: -1 })
+  .limit(1);
+
+    console.log(proj);
+    
 };
 
 export const createProject = async (projectData) => {
