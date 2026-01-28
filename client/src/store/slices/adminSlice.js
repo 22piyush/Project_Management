@@ -99,6 +99,21 @@ export const getAllUsers = createAsyncThunk(
 );
 
 
+export const getAllProjects = createAsyncThunk(
+  "getAllProjects",                // must be string
+  async (_, thunkAPI) => {      //no unused param
+    try {
+      const res = await axiosInstance.get("/admin/projects");
+      return res.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message
+      );
+    }
+  }
+);
+
+
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
@@ -129,6 +144,10 @@ const adminSlice = createSlice({
     .addCase(getAllUsers.fulfilled, (state, action) => {
       if(state.users) 
         state.users = action.payload.users;
+    })
+    .addCase(getAllProjects.fulfilled, (state, action) => {
+      if(state.projects) 
+        state.projects = action.payload.projects;
     })
 
     .addCase(createTeacher.fulfilled, (state, action) => {

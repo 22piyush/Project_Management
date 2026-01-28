@@ -151,7 +151,7 @@ export const getAllUsers = asyncHandler(async (req, res, next) => {
 
 export const getAllProjects = asyncHandler(async (req, res, next) => {
 
-  const { projects } = await projectServices.getAllProjects();
+  const projects = await projectServices.getAllProjects();
   res.json({
     success: true,
     message: "Project fetch successfully",
